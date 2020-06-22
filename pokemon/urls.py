@@ -15,7 +15,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from pokedex.views import pokemon_upload
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('upload-csv/', pokemon_upload, name='pokemon_upload'),
 ]
