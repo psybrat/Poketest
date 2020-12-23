@@ -1,8 +1,16 @@
 from django.shortcuts import render
 from django.contrib import messages
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.http import QueryDict
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
 from .models import Pokemon
+from pokedex.serializers import PokemonSerializer
+
 
 import io, csv
+
 
 def pokemon_upload(request):
     template = "pokemon_upload.html"
@@ -28,9 +36,6 @@ def pokemon_upload(request):
         :param g: Bool Ghost type
         :return: Bool
         """
-        print('---')
-        print(f, l, g)
-        print('---')
         if not f:
             return True
         if l:
@@ -38,7 +43,6 @@ def pokemon_upload(request):
         if g:
             return False
         return True
-
 
     if not csv_file.name.endswith('.csv'):
         messages.error(request, 'This is not a csv file')
@@ -66,3 +70,24 @@ def pokemon_upload(request):
 
     context = {}
     return render(request, template, context)
+
+
+@api_view(['GET'])
+def getAll_Pokemons(request):
+    PAGE_SIZE = 2
+    try:
+        pokemon_all = Pokemon.objects.all()
+        paginator = Paginator(pokemon_all, PAGE_SIZE)
+        print(request.GET)
+        page = request.GET.get('page')
+        try:
+            pokemons = paginator.page(page)
+        except PageNotAnInteger:
+            pokemons = paginator.page(1)
+        except EmptyPage:
+            pokemons = paginator.page(paginator.num_pages)
+        serializer_context = {'request': request}
+        serializer = PokemonSerializer(pokemons, context=serializer_context, many=True)
+        return Response(serializer.data)
+    except Pokemon.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
