@@ -91,3 +91,8 @@ def getAll_Pokemons(request):
         return Response(serializer.data)
     except Pokemon.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['GET'])
+def hello_world(request):
+    return Response('Hello World!')
