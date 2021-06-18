@@ -2,7 +2,14 @@ provider "aws" {
   region = "eu-central-1"
 }
 
+data "aws_key_pair" "current" {}
+output "key_pair_name" {
+  value = data.aws_key_pair.current
+}
+
+
 data "aws_availability_zones" "available" {}
+
 data "aws_ami" "latest_ubuntu" {
   owners = ["099720109477"]
   most_recent = true
@@ -13,10 +20,11 @@ data "aws_ami" "latest_ubuntu" {
 }
 
 resource "aws_launch_configuration" "Ubuntu_poketest" {
-#  name = "Poketest-api-server-Highly-Available-LC"
+  name_prefix = "Poketest-api-server-Highly-Available-LC-"
   image_id = data.aws_ami.latest_ubuntu.id
   instance_type = "t2.micro"
   security_groups = [aws_security_group.web_server.id]
+  key_name = "ssh-key-frankfurt"
   user_data = file("main_test.sh")
   lifecycle {
     create_before_destroy = true
@@ -24,7 +32,7 @@ resource "aws_launch_configuration" "Ubuntu_poketest" {
 }
 
 resource "aws_autoscaling_group" "web" {
-  name = "Poketest-api-server-Highly-Available-ASG"
+  name = "ASG-$(aws_launch_configuration.Ubuntu_poketest.name)"
   launch_configuration = aws_launch_configuration.Ubuntu_poketest.name
   max_size = 2
   min_size = 2
