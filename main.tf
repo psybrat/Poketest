@@ -2,11 +2,6 @@ provider "aws" {
   region = "eu-central-1"
 }
 
-data "aws_key_pair" "current" {}
-output "key_pair_name" {
-  value = data.aws_key_pair.current
-}
-
 
 data "aws_availability_zones" "available" {}
 
