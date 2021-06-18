@@ -2,6 +2,7 @@ provider "aws" {
   region = "eu-central-1"
 }
 
+data "aws_availability_zones" "available" {}
 data "aws_ami" "latest_ubuntu" {
   owners = ["099720109477"]
   most_recent = true
@@ -11,14 +12,76 @@ data "aws_ami" "latest_ubuntu" {
   }
 }
 
-resource "aws_instance" "Ubuntu_poketest" {
-  ami = data.aws_ami.latest_ubuntu.id
+resource "aws_launch_configuration" "Ubuntu_poketest" {
+  name = "Poketest-api-server-Highly-Available-LC"
+  image_id = data.aws_ami.latest_ubuntu.id
   instance_type = "t2.micro"
-  vpc_security_group_ids = [aws_security_group.web_server.id]
+  security_groups = [aws_security_group.web_server.id]
+  user_data = file("main_test.sh")
+  lifecycle {
+    create_before_destroy = true
+  }
   tags = {
     Name = "Poketest"
   }
 }
+
+resource "aws_autoscaling_group" "web" {
+  name = "Poketest-api-server-Highly-Available-ASG"
+  launch_configuration = aws_launch_configuration.Ubuntu_poketest.name
+  max_size = 2
+  min_size = 2
+  min_elb_capacity = 2
+  vpc_zone_identifier = [aws_default_subnet.default_az1.id, aws_default_subnet.default_az2.id]
+  health_check_type = "ELB"
+  load_balancers = [aws_elb.web.name]
+
+  dynamic "tag" {
+    for_each = {
+      Name = "api-server-in-ASG"
+      Owner = "psybrat"
+    }
+    content {
+      key = tag.key
+      value = tag.value
+      propagate_at_launch = true
+    }
+  }
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "aws_elb" "web" {
+  name = "api-server-on-ELB"
+  availability_zones = [data.aws_availability_zones.available.names[0], data.aws_availability_zones.available.names[1]]
+  security_groups = [aws_security_group.web_server.id]
+  listener {
+    instance_port = 80
+    instance_protocol = "http"
+    lb_port = 80
+    lb_protocol = "http"
+  }
+  health_check {
+    healthy_threshold = 2
+    interval = 10
+    target = "HTTP:80"
+    timeout = 3
+    unhealthy_threshold = 2
+  }
+  tags = {
+    Name = "Poketest-api-server-Highly-Available-ELB"
+  }
+}
+
+resource "aws_default_subnet" "default_az1" {
+  availability_zone = data.aws_availability_zones.available.names[0]
+}
+
+resource "aws_default_subnet" "default_az2" {
+  availability_zone = data.aws_availability_zones.available.names[1]
+}
+
 
 resource "aws_security_group" "web_server" {
   name = "Poketest Security group"
@@ -37,4 +100,9 @@ resource "aws_security_group" "web_server" {
     to_port = 0
     cidr_blocks = ["0.0.0.0/0"]
   }
+}
+
+
+output "web_loadbalancer_url" {
+  value = aws_elb.web.dns_name
 }
