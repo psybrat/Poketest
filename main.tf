@@ -84,11 +84,14 @@ resource "aws_security_group" "web_server" {
   name = "Poketest Security group"
   description = "Security group for Poketest app"
 
-  ingress {
-    from_port = 8000
-    protocol = "tcp"
-    to_port = 8000
-    cidr_blocks = ["0.0.0.0/0"]
+  dynamic "ingress" {
+    for_each = ["8000", "80", "22"]
+    content {
+      from_port = ingress.value
+      to_port = ingress.value
+      protocol = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
   }
 
   egress {
