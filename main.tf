@@ -21,9 +21,6 @@ resource "aws_launch_configuration" "Ubuntu_poketest" {
   lifecycle {
     create_before_destroy = true
   }
-  tags = {
-    Name = "Poketest"
-  }
 }
 
 resource "aws_autoscaling_group" "web" {
@@ -65,7 +62,7 @@ resource "aws_elb" "web" {
   health_check {
     healthy_threshold = 2
     interval = 10
-    target = "HTTP:80"
+    target = "HTTP:80/"
     timeout = 3
     unhealthy_threshold = 2
   }
