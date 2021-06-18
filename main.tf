@@ -13,7 +13,7 @@ data "aws_ami" "latest_ubuntu" {
 }
 
 resource "aws_launch_configuration" "Ubuntu_poketest" {
-  name = "Poketest-api-server-Highly-Available-LC"
+#  name = "Poketest-api-server-Highly-Available-LC"
   image_id = data.aws_ami.latest_ubuntu.id
   instance_type = "t2.micro"
   security_groups = [aws_security_group.web_server.id]
