@@ -3,7 +3,7 @@ provider "aws" {
 }
 
 locals {
-  STATE_BUCKET = 'pokemon-terraform-state'
+  STATE_BUCKET = "pokemon-terraform-state"
 }
 
 data "aws_availability_zones" "available" {}
