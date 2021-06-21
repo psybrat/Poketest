@@ -2,7 +2,6 @@ provider "aws" {
   region = "eu-central-1"
 }
 
-
 data "aws_availability_zones" "available" {}
 
 data "aws_ami" "latest_ubuntu" {
@@ -13,6 +12,22 @@ data "aws_ami" "latest_ubuntu" {
     values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
   }
 }
+
+resource "aws_s3_bucket" "state_bucket" {
+  bucket = "pokemon-terraform-state"
+  acl = "private"
+  versioning {
+    enabled = true
+  }
+  server_side_encryption_configuration {
+    rule {
+      apply_server_side_encryption_by_default {
+        sse_algorithm = "AES256"
+      }
+    }
+  }
+}
+
 
 resource "aws_launch_configuration" "Ubuntu_poketest" {
   name_prefix = "Poketest-api-server-Highly-Available-LC-"
