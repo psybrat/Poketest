@@ -42,7 +42,7 @@ resource "aws_launch_configuration" "Ubuntu_poketest" {
 }
 
 resource "aws_autoscaling_group" "web" {
-  name = "ASG-$(aws_launch_configuration.Ubuntu_poketest.name)"
+  name = "ASG-${aws_launch_configuration.Ubuntu_poketest.name})"
   launch_configuration = aws_launch_configuration.Ubuntu_poketest.name
   max_size = 2
   min_size = 2
