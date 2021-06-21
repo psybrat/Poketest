@@ -2,6 +2,10 @@ provider "aws" {
   region = "eu-central-1"
 }
 
+locals {
+  STATE_BUCKET = 'pokemon-terraform-state'
+}
+
 data "aws_availability_zones" "available" {}
 
 data "aws_ami" "latest_ubuntu" {
@@ -14,8 +18,7 @@ data "aws_ami" "latest_ubuntu" {
 }
 
 resource "aws_s3_bucket" "state_bucket" {
-  bucket = "pokemon-terraform-state"
-  acl = "private"
+  bucket = local.STATE_BUCKET
   versioning {
     enabled = true
   }
@@ -28,6 +31,12 @@ resource "aws_s3_bucket" "state_bucket" {
   }
 }
 
+resource "aws_s3_bucket_public_access_block" "state" {
+  bucket = local.STATE_BUCKET
+
+  block_public_acls = true
+  block_public_policy = true
+}
 
 resource "aws_launch_configuration" "Ubuntu_poketest" {
   name_prefix = "Poketest-api-server-Highly-Available-LC-"
