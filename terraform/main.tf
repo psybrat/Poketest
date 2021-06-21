@@ -6,6 +6,17 @@ locals {
   STATE_BUCKET = "pokemon-terraform-state"
 }
 
+
+terraform {
+  backend "s3" {
+    bucket = local.STATE_BUCKET
+    key = "dev/terraform.tfstate"
+    region = "eu-central-1"
+  }
+}
+
+
+
 data "aws_availability_zones" "available" {}
 
 data "aws_ami" "latest_ubuntu" {
