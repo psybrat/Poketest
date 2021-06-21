@@ -9,13 +9,11 @@ locals {
 
 terraform {
   backend "s3" {
-    bucket = local.STATE_BUCKET
+    bucket = "pokemon-terraform-state"
     key = "dev/terraform.tfstate"
     region = "eu-central-1"
   }
 }
-
-
 
 
 data "aws_availability_zones" "available" {}
@@ -29,28 +27,7 @@ data "aws_ami" "latest_ubuntu" {
   }
 }
 
-resource "aws_s3_bucket" "state_bucket" {
-  bucket = local.STATE_BUCKET
-  versioning {
-    enabled = true
-  }
-  server_side_encryption_configuration {
-    rule {
-      apply_server_side_encryption_by_default {
-        sse_algorithm = "AES256"
-      }
-    }
-  }
-}
 
-resource "aws_s3_bucket_public_access_block" "state" {
-  bucket = local.STATE_BUCKET
-
-  block_public_acls = true
-  block_public_policy = true
-  ignore_public_acls = true
-  restrict_public_buckets = true
-}
 
 resource "aws_launch_configuration" "Ubuntu_poketest" {
   name_prefix = "Poketest-api-server-Highly-Available-LC-"
