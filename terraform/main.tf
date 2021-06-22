@@ -35,7 +35,7 @@ resource "aws_launch_configuration" "Ubuntu_poketest" {
   instance_type = "t2.micro"
   security_groups = [aws_security_group.web_server.id]
   key_name = "ssh-key-frankfurt"
-  user_data = file("main_test.sh")
+  user_data = file("CodeDeployInstall.sh")
   lifecycle {
     create_before_destroy = true
   }
