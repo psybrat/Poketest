@@ -2,7 +2,7 @@ version: 0.0
 os: linux
 files:
   - source: /
-    destination: /home/ubuntu/www/
+    destination: /home/ubuntu/www/pokemon
 permissions:
   - object: /home/ubuntu/www
     pattern: "**"
