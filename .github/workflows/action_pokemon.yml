@@ -2,9 +2,9 @@ name: CI-CD-Pokemon-AWS-pipeline
 
 env:
     EC2_PACKAGE_S3_BUCKET: "psybrat-pokemon-packages"
-    EC2_APPLICATION_NAME : "Pokemon_app"
+    EC2_APPLICATION_NAME : "pokemon_app_deploy"
     EC2_ENVIRONMENT_NAME : "Pokemon_app-env"
-    DEPLOYMENT_GROUP_NAME: ""
+    DEPLOYMENT_GROUP_NAME: "pokemon_codedeploy_group"
     DEPLOY_PACKAGE_NAME  : "pokemon_app_${{ github.sha }}.zip"
     AWS_REGION_NAME      : "eu-central-1"
 
