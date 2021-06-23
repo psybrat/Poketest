@@ -15,6 +15,16 @@ resource "aws_iam_role_policy_attachment" "code_deploy_instance" {
   role = aws_iam_role.code_deploy_instance.name
 }
 
+resource "aws_iam_instance_profile" "code_deploy_instance" {
+  name = "ec2-instance-profile-for-CodeDeploy"
+  role = aws_iam_role.code_deploy_instance.name
+}
+
+resource "aws_iam_policy" "code_deploy_instance" {
+  name = "IAM-policy-CD-instance"
+  policy = file("${local.AMAZON_ROLES_DIR}/AmazonEC2RoleforAWSCodeDeploy.json")
+}
+
 
 resource "aws_iam_role" "code_deploy" {
   name               = "code_deploy_role"
