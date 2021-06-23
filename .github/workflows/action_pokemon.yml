@@ -2,8 +2,8 @@ name: CI-CD-Pokemon-AWS-pipeline
 
 env:
     EC2_PACKAGE_S3_BUCKET: "psybrat-pokemon-packages"
-    EC2_APPLICATION_NAME : "Pokemon-app"
-    EC2_ENVIRONMENT_NAME : "Pokemon-app-env"
+    EC2_APPLICATION_NAME : "Pokemon_app"
+    EC2_ENVIRONMENT_NAME : "Pokemon_app-env"
     DEPLOYMENT_GROUP_NAME: ""
     DEPLOY_PACKAGE_NAME  : "pokemon_app_${{ github.sha }}.zip"
     AWS_REGION_NAME      : "eu-central-1"
@@ -54,9 +54,9 @@ jobs:
           id  : deploy
           run : |
             aws deploy create-deployment \
-            --application-name ${{ EC2_APPLICATION_NAME }} \
-            --deployment-group-name ${{ DEPLOYMENT_GROUP_NAME }} \
-            --deployment-config-name ?????? \
+            --application-name ${{ env.EC2_APPLICATION_NAME }} \
+            --deployment-group-name ${{ env.DEPLOYMENT_GROUP_NAME }} \
+#            --deployment-config-name ?????? \
             --github-location repository=${{ github.repository }},commitId=${{ github.sha }}
         - name: Print fin message
           run: echo CD Complete!
