@@ -36,7 +36,7 @@ resource "aws_launch_configuration" "Ubuntu_poketest" {
   security_groups = [aws_security_group.web_server.id]
   key_name = "ssh-key-frankfurt"
   user_data = file("CodeDeployInstall.sh")
-
+  iam_instance_profile = aws_iam_instance_profile.code_deploy_instance.id
   lifecycle {
     create_before_destroy = true
   }
