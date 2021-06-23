@@ -1,0 +1,61 @@
+name: CI-CD-Pokemon-AWS-pipeline
+
+env:
+    EC2_PACKAGE_S3_BUCKET: "psybrat-pokemon-packages"
+    EC2_APPLICATION_NAME : "Pokemon_app"
+    EC2_ENVIRONMENT_NAME : "Pokemon_app-env"
+    DEPLOYMENT_GROUP_NAME: ""
+    DEPLOY_PACKAGE_NAME  : "pokemon_app_${{ github.sha }}.zip"
+    AWS_REGION_NAME      : "eu-central-1"
+
+on:
+    push:
+        branches:
+            - master
+
+jobs:
+    CI_job:
+        runs-on : ubuntu-latest
+
+        steps:
+        - name: Git clone repo
+          uses: actions/checkout@v1
+
+        - name: Create ZIP deployment package
+          run : zip -r ${{ env.DEPLOY_PACKAGE_NAME }} ./ -x *.git*
+
+        - name: Configure AWS Credentials
+          uses: aws-actions/configure-aws-credentials@v1
+          with:
+            aws-access-key-id    : ${{ secrets.MY_AWS_ACCESS_KEY }}
+            aws-secret-access-key: ${{ secrets.MY_AWS_SECRET_KEY }}
+            aws-region           : ${{ env.AWS_REGION_NAME }}
+
+#        - name: Copy Deployment package to S3 bucket
+#          run : aws s3 cp ${{ env.DEPLOY_PACKAGE_NAME }} s3://${{ env.EV_PACKAGE_S3_BUCKET_NAME }}/
+
+        - name: Print fin message
+          run : echo CI Complete!
+
+
+    CD_job:
+        needs: CI_job
+
+        steps:
+        - name: Configure AWS Credentials
+          uses: aws-actions/configure-aws-credentials@v1
+          with:
+            aws-access-key-id    : ${{ secrets.MY_AWS_ACCESS_KEY }}
+            aws-secret-access-key: ${{ secrets.MY_AWS_SECRET_KEY }}
+            aws-region           : ${{ env.AWS_REGION_NAME }}
+
+        - name: Create CodeDeploy Deployment
+          id  : deploy
+          run : |
+            aws deploy create-deployment \
+            --application-name ${{ EC2_APPLICATION_NAME }} \
+            --deployment-group-name ${{ DEPLOYMENT_GROUP_NAME }} \
+            --deployment-config-name ?????? \
+            --github-location repository=${{ github.repository }},commitId=${{ github.sha }}
+        - name: Print fin message
+          run: echo CD Complete!
