@@ -8,10 +8,10 @@ env:
     DEPLOY_PACKAGE_NAME  : "pokemon_app_${{ github.sha }}.zip"
     AWS_REGION_NAME      : "eu-central-1"
 
-on:
-    push:
-        branches:
-            - master
+#on:
+#    push:
+#        branches:
+#            - master
 
 jobs:
     CI_job:
