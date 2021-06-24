@@ -74,7 +74,7 @@ resource "aws_elb" "web" {
   security_groups = [aws_security_group.web_server.id]
 
   dynamic "listener" {
-    for_each = ["80, 8000"]
+    for_each = ["80", "8000"]
     content {
       instance_port = listener.value
       instance_protocol = "http"
