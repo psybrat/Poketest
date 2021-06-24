@@ -72,12 +72,17 @@ resource "aws_elb" "web" {
   name = "api-server-on-ELB"
   availability_zones = [data.aws_availability_zones.available.names[0], data.aws_availability_zones.available.names[1]]
   security_groups = [aws_security_group.web_server.id]
-  listener {
-    instance_port = 80
-    instance_protocol = "http"
-    lb_port = 80
-    lb_protocol = "http"
+
+  dynamic "listener" {
+    for_each = ["80, 8000"]
+    content {
+      instance_port = listener.value
+      instance_protocol = "http"
+      lb_port = listener.value
+      lb_protocol = "http"
+    }
   }
+
   health_check {
     healthy_threshold = 2
     interval = 10
