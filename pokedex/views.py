@@ -95,4 +95,4 @@ def getAll_Pokemons(request):
 
 @api_view(['GET'])
 def hello_world(request):
-    return Response('Hello World!')
+    return Response('Hello World! v2')
