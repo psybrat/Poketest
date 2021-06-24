@@ -6,6 +6,7 @@ resource "aws_codedeploy_deployment_group" "pokemon_dg" {
   app_name = aws_codedeploy_app.pokemon_deploy.name
   deployment_group_name = "pokemon_codedeploy_group"
   service_role_arn = aws_iam_role.code_deploy.arn
+  autoscaling_groups = [aws_autoscaling_group.web.name]
 
   deployment_style {
     deployment_type = "BLUE_GREEN"
@@ -16,8 +17,6 @@ resource "aws_codedeploy_deployment_group" "pokemon_dg" {
     enabled = true
     events = ["DEPLOYMENT_FAILURE"]
   }
-
-  autoscaling_groups = [aws_autoscaling_group.web.name]
 
   load_balancer_info {
     elb_info {
@@ -30,7 +29,7 @@ resource "aws_codedeploy_deployment_group" "pokemon_dg" {
       action_on_timeout = "CONTINUE_DEPLOYMENT"
     }
     terminate_blue_instances_on_deployment_success {
-      action = "TERMINATE"
+      action = "KEEP_ALIVE"
     }
     green_fleet_provisioning_option {
       action = "DISCOVER_EXISTING"

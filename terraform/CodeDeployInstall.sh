@@ -19,7 +19,7 @@ REGION_ID=$(curl http://169.254.169.254/latest/dynamic/instance-identity/documen
             python3 -c "import sys, json; print(json.load(sys.stdin)['region'])")
 
 echo "----------Downloading CodeDeploy kit-------------"
-pushd /home/ubuntu
+pushd /home/ubuntu || return
 wget "https://aws-codedeploy-${REGION_ID}.s3.${REGION_ID}.amazonaws.com/latest/install" 
 
 echo "----------Installing CodeDeploy agent------------"
