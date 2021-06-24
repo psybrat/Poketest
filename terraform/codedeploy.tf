@@ -33,7 +33,7 @@ resource "aws_codedeploy_deployment_group" "pokemon_dg" {
       action = "TERMINATE"
     }
     green_fleet_provisioning_option {
-      action = "COPY_AUTO_SCALING_GROUP"
+      action = "DISCOVER_EXISTING"
     }
   }
 }
