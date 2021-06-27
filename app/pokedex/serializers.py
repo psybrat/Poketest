@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from pokedex.models import Pokemon
+from app.pokedex.models import Pokemon
 
 
 class PokemonSerializer(serializers.ModelSerializer):

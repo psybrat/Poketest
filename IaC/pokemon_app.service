@@ -1,0 +1,5 @@
+[Unit]
+Description=Pokemon app server
+
+[Service]
+ExecStart=/home/ubuntu/www/pokemon-venv/bin/python /home/ubuntu/www/Pokemon/manage.py runserver 0.0.0.0:8000

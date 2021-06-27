@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 chown ubuntu:ubuntu /home/ubuntu/www
-virtualenv /home/ubuntu/www/pokemon-venv
+python3 -m venv /home/ubuntu/www/pokemon-venv
 chown ubuntu:ubuntu /home/ubuntu/www/pokemon-venv
 chown ubuntu:ubuntu /home/ubuntu/www/pokemon-venv/*
 source /home/ubuntu/www/pokemon-venv/bin/activate

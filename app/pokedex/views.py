@@ -1,12 +1,11 @@
 from django.shortcuts import render
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.http import QueryDict
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Pokemon
-from pokedex.serializers import PokemonSerializer
+from app.pokedex.serializers import PokemonSerializer
 
 
 import io, csv

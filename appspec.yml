@@ -10,24 +10,24 @@ permissions:
     group: ubuntu
 hooks:
   BeforeInstall:
-    - location: scripts/clean_instance.sh
+    - location: IaC/scripts/clean_instance.sh
       timeout: 6000
       runas: root
   AfterInstall:
-    - location: scripts/install_os_dependencies.sh
+    - location: IaC/scripts/install_os_dependencies.sh
       timeout: 6000
       runas: root
-    - location: scripts/install_python_dependencies.sh
+    - location: IaC/scripts/install_python_dependencies.sh
       timeout: 6000
       runas: root
-    - location: scripts/migrate.sh
+    - location: IaC/scripts/migrate.sh
       timeout: 6000
       runas: ubuntu
   ApplicationStart:
-    - location: scripts/start_application.sh
+    - location: IaC/scripts/start_application.sh
       timeout: 6000
       runas: ubuntu
 #  ApplicationStop:
-#    - location: scripts/stop_application.sh
+#    - location: IaC/scripts/stop_application.sh
 #      timeout: 6000
 #      runas: ubuntu
