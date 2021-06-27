@@ -37,3 +37,16 @@ Professor Oak is in trouble! A wild Blastoise wreaked havoc in the server room a
 -   Maintainability: is it written in a clean, maintainable way?
 -   Testing: is the system adequately tested?
 
+### Infrastructure as Code
+-   IaC Tool:  Terraform
+-   Provider: AWS
+
+-   Structure: 
+    - Auto Scaling group: 2 EC2 instances (Ubuntu), Elastic Load Balancer
+    - Added security group
+    - Added subnets
+    - Terraform state storage: S3 bucket
+    - CD Tool: AWS CodeDeploy
+-   Controling web_server method
+    - Service Unit 
+   
