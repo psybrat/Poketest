@@ -25,7 +25,7 @@ hooks:
       runas: ubuntu
     - location: IaC/scripts/add_app_service.sh
       timeout: 6000
-      runas: ubuntu
+      runas: root
   ApplicationStart:
     - location: IaC/scripts/start_application.sh
       timeout: 6000
