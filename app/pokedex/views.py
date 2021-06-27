@@ -5,7 +5,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Pokemon
-from app.pokedex.serializers import PokemonSerializer
+from pokedex.serializers import PokemonSerializer
 
 
 import io, csv
