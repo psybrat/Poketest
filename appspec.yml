@@ -30,8 +30,7 @@ hooks:
     - location: IaC/scripts/start_application.sh
       timeout: 6000
       runas: ubuntu
-
-#  ApplicationStop:
-#    - location: IaC/scripts/stop_application.sh
-#      timeout: 6000
-#      runas: ubuntu
+  ApplicationStop:
+    - location: IaC/scripts/stop_application.sh
+      timeout: 6000
+      runas: ubuntu
