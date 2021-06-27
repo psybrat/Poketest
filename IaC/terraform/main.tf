@@ -4,7 +4,7 @@ provider "aws" {
 
 locals {
   AWS_SSH_KEY_NAME = "ssh-key-frankfurt"
-
+  APP_NAME = "Pokemon-api"
   OWNER = "psybrat"
 }
 
@@ -31,7 +31,7 @@ data "aws_ami" "latest_ubuntu" {
 
 
 resource "aws_launch_configuration" "Ubuntu_poketest" {
-  name_prefix = "Poketest-api-server-Highly-Available-LC-"
+  name_prefix = "${local.APP_NAME}-LC-"
   image_id = data.aws_ami.latest_ubuntu.id
   instance_type = "t2.micro"
   security_groups = [aws_security_group.web_server.id]
@@ -44,7 +44,7 @@ resource "aws_launch_configuration" "Ubuntu_poketest" {
 }
 
 resource "aws_autoscaling_group" "web" {
-  name = "ASG-${aws_launch_configuration.Ubuntu_poketest.name})"
+  name = "ASG-${aws_launch_configuration.Ubuntu_poketest.name}"
   launch_configuration = aws_launch_configuration.Ubuntu_poketest.name
   max_size = 2
   min_size = 2
@@ -55,8 +55,9 @@ resource "aws_autoscaling_group" "web" {
 
   dynamic "tag" {
     for_each = {
-      Name = "api-server-in-ASG"
+      Name = "${local.APP_NAME}-ASG"
       Owner = local.OWNER
+      APP = local.APP_NAME
     }
     content {
       key = tag.key
@@ -70,7 +71,7 @@ resource "aws_autoscaling_group" "web" {
 }
 
 resource "aws_elb" "web" {
-  name = "api-server-on-ELB"
+  name = "${local.APP_NAME}-ELB"
   availability_zones = [data.aws_availability_zones.available.names[0], data.aws_availability_zones.available.names[1]]
   security_groups = [aws_security_group.web_server.id]
 
@@ -92,7 +93,8 @@ resource "aws_elb" "web" {
     unhealthy_threshold = 2
   }
   tags = {
-    Name = "Poketest-api-server-Highly-Available-ELB"
+    Name = "${local.APP_NAME}-ELB"
+    APP = local.APP_NAME
   }
 }
 
@@ -106,8 +108,8 @@ resource "aws_default_subnet" "default_az2" {
 
 
 resource "aws_security_group" "web_server" {
-  name = "Poketest Security group"
-  description = "Security group for Poketest app"
+  name = "${local.APP_NAME} Security group"
+  description = "Security group for ${local.APP_NAME}"
 
   dynamic "ingress" {
     for_each = ["8000", "80", "22"]
