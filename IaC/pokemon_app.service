@@ -3,10 +3,13 @@ Description=Pokemon app server
 After=multi-user.target
 
 [Service]
+Type=oneshot
+RemainAfterExit=yes
 ExecStart=/home/ubuntu/www/pokemon-venv/bin/python /home/ubuntu/www/pokemon/app/manage.py runserver 0.0.0.0:8000
 Environment=PYTHONUNBUFFERED=1
 Restart=always
 RestartSec=5s
+
 
 [Install]
 WantedBy=multi-user.target
