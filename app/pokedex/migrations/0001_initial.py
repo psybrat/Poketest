@@ -15,6 +15,7 @@ class Migration(migrations.Migration):
             name='Pokemon',
             fields=[
                 ('pokemon_id', models.PositiveSmallIntegerField(primary_key=True, serialize=False, unique=True)),
+                ('number', models.PositiveSmallIntegerField()),
                 ('name', models.CharField(max_length=255, unique=True)),
                 ('type_1', models.CharField(max_length=63)),
                 ('type_2', models.CharField(max_length=63)),
