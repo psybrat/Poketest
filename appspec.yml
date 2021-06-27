@@ -23,10 +23,14 @@ hooks:
     - location: IaC/scripts/migrate.sh
       timeout: 6000
       runas: ubuntu
+    - location: IaC/scripts/add_app_service.sh
+      timeout: 6000
+      runas: ubuntu
   ApplicationStart:
     - location: IaC/scripts/start_application.sh
       timeout: 6000
       runas: ubuntu
+
 #  ApplicationStop:
 #    - location: IaC/scripts/stop_application.sh
 #      timeout: 6000
