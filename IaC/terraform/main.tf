@@ -3,10 +3,7 @@ provider "aws" {
 }
 
 locals {
-  STATE_BUCKET = "pokemon-terraform-state"
   AWS_SSH_KEY_NAME = "ssh-key-frankfurt"
-  BACKEND_REGION = "eu-central-1"
-  BACKEND_BUCKET = "pokemon-terraform-state"
 
   OWNER = "psybrat"
 }
@@ -14,9 +11,9 @@ locals {
 
 terraform {
   backend "s3" {
-    bucket = local.BACKEND_BUCKET
+    bucket = "pokemon-terraform-state"
     key = "dev/terraform.tfstate"
-    region = local.BACKEND_REGION
+    region = "eu-central-1"
   }
 }
 
