@@ -9,7 +9,6 @@ resource "aws_codedeploy_deployment_group" "pokemon_dg" {
   autoscaling_groups = [aws_autoscaling_group.web.name]
 
   deployment_style {
-    deployment_type = "BLUE_GREEN"
     deployment_option = "WITH_TRAFFIC_CONTROL"
   }
 
