@@ -9,7 +9,6 @@ env:
     AWS_REGION_NAME      : "eu-central-1"
 
 on:
-#    workflow_dispatch 
     push:
         branches:
             - master
@@ -17,6 +16,7 @@ on:
             - '**.md'
             - 'IaC/**'
             - '.github/**'
+    #workflow_dispatch 
 
 jobs:
     CI_job:
