@@ -1,7 +1,11 @@
 [Unit]
 Description=Pokemon app server
+After=multi-user.target
 
 [Service]
 ExecStart=/home/ubuntu/www/pokemon-venv/bin/python /home/ubuntu/www/pokemon/app/manage.py runserver 0.0.0.0:8000
 Environment=PYTHONUNBUFFERED=1
 Restart=always
+
+[Install]
+WantedBy=multi-user.target
