@@ -4,14 +4,19 @@ provider "aws" {
 
 locals {
   STATE_BUCKET = "pokemon-terraform-state"
+  AWS_SSH_KEY_NAME = "ssh-key-frankfurt"
+  BACKEND_REGION = "eu-central-1"
+  BACKEND_BUCKET = "pokemon-terraform-state"
+
+  OWNER = "psybrat"
 }
 
 
 terraform {
   backend "s3" {
-    bucket = "pokemon-terraform-state"
+    bucket = local.BACKEND_BUCKET
     key = "dev/terraform.tfstate"
-    region = "eu-central-1"
+    region = local.BACKEND_REGION
   }
 }
 
@@ -28,13 +33,12 @@ data "aws_ami" "latest_ubuntu" {
 }
 
 
-
 resource "aws_launch_configuration" "Ubuntu_poketest" {
   name_prefix = "Poketest-api-server-Highly-Available-LC-"
   image_id = data.aws_ami.latest_ubuntu.id
   instance_type = "t2.micro"
   security_groups = [aws_security_group.web_server.id]
-  key_name = "ssh-key-frankfurt"
+  key_name = local.AWS_SSH_KEY_NAME
   user_data = file("CodeDeployInstall.sh")
   iam_instance_profile = aws_iam_instance_profile.code_deploy_instance.id
   lifecycle {
@@ -55,7 +59,7 @@ resource "aws_autoscaling_group" "web" {
   dynamic "tag" {
     for_each = {
       Name = "api-server-in-ASG"
-      Owner = "psybrat"
+      Owner = local.OWNER
     }
     content {
       key = tag.key
@@ -127,6 +131,3 @@ resource "aws_security_group" "web_server" {
 }
 
 
-output "web_loadbalancer_url" {
-  value = aws_elb.web.dns_name
-}
