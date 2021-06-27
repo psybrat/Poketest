@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-systemctl --user restart pokemon_app
+systemctl --user stop pokemon_app
